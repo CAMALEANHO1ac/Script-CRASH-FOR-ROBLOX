@@ -39,6 +39,9 @@ end)
 
 game:GetService("RunService").RenderStepped:Connect(function()
     if moveForward then
-        player.Character:TranslateBy(Vector3.new(0, 0, -0.1))
+        local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid:Move(Vector3.new(0, 0, -1), true)
+        end
     end
 end)
