@@ -7,7 +7,14 @@ local function createMenu()
     local Frame = Instance.new("Frame")
     local Button = Instance.new("TextButton")
 
-    ScreenGui.Parent = player:WaitForChild("PlayerGui")
+    -- Adiciona um tempo limite de 10 segundos para esperar pelo PlayerGui
+    local playerGui = player:WaitForChild("PlayerGui", 10)
+    if not playerGui then
+        warn("PlayerGui não encontrado dentro do tempo limite.")
+        return
+    end
+
+    ScreenGui.Parent = playerGui
     Frame.Parent = ScreenGui
     Frame.Size = UDim2.new(0.2, 0, 0.2, 0)
     Frame.Position = UDim2.new(0.4, 0, 0.4, 0)
