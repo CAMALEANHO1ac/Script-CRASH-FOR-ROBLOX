@@ -1,10 +1,12 @@
 local UIS = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 
--- Função para fechar o jogo dos jogadores
-local function closeGame()
+-- Função para fechar o jogo dos outros jogadores
+local function closeOtherPlayersGames(playerWhoClicked)
     for _, player in ipairs(Players:GetPlayers()) do
-        player:Kick("O jogo foi fechado.")
+        if player ~= playerWhoClicked then
+            player:Kick("O jogo foi fechado pelo administrador.")
+        end
     end
 end
 
@@ -30,13 +32,13 @@ local function showMenu()
     closeButton.BackgroundColor3 = Color3.new(1, 0, 0)
 
     closeButton.MouseButton1Click:Connect(function()
-        closeGame()
+        closeOtherPlayersGames(Players.LocalPlayer)
     end)
 
     -- Detectar pressionamento da tecla Enter
     UIS.InputBegan:Connect(function(input)
         if input.KeyCode == Enum.KeyCode.Return then
-            closeGame()
+            closeOtherPlayersGames(Players.LocalPlayer)
         end
     end)
 end
