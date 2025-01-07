@@ -1,5 +1,4 @@
 local player = game.Players.LocalPlayer
-local moveForward = false
 local menuOpen = false
 
 local function createMenu()
@@ -22,9 +21,13 @@ local function createMenu()
 
     Button.Parent = Frame
     Button.Size = UDim2.new(1, 0, 1, 0)
-    Button.Text = "Avançar"
+    Button.Text = "Deletar Entidades"
     Button.MouseButton1Click:Connect(function()
-        moveForward = not moveForward
+        for _, entity in pairs(workspace:GetChildren()) do
+            if entity:IsA("Model") or entity:IsA("Part") then
+                entity:Destroy()
+            end
+        end
     end)
 end
 
@@ -34,14 +37,5 @@ game:GetService("UserInputService").InputBegan:Connect(function(input)
     if input.KeyCode == Enum.KeyCode.Return then
         menuOpen = not menuOpen
         player.PlayerGui.ScreenGui.Frame.Visible = menuOpen
-    end
-end)
-
-game:GetService("RunService").RenderStepped:Connect(function()
-    if moveForward then
-        local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
-        if humanoid then
-            humanoid:Move(Vector3.new(0, 0, -1), true)
-        end
     end
 end)
