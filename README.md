@@ -1,57 +1,37 @@
-local UIS = game:GetService("UserInputService")
-local Players = game:GetService("Players")
-
+local player = game.Players.LocalPlayer
 local moveForward = false
+local menuOpen = false
 
--- Função para exibir o menu
-local function showMenu()
-    local screenGui = Instance.new("ScreenGui", Players.LocalPlayer:WaitForChild("PlayerGui"))
-    screenGui.Name = "MenuGui"
-    
-    local frame = Instance.new("Frame", screenGui)
-    frame.Size = UDim2.new(0.5, 0, 0.5, 0)
-    frame.Position = UDim2.new(0.25, 0, 0.25, 0)
-    frame.BackgroundColor3 = Color3.new(0, 0, 0)
+local function createMenu()
+    local ScreenGui = Instance.new("ScreenGui")
+    local Frame = Instance.new("Frame")
+    local Button = Instance.new("TextButton")
 
-    local textLabel = Instance.new("TextLabel", frame)
-    textLabel.Size = UDim2.new(1, 0, 0.8, 0)
-    textLabel.Text = "Pressione o botão abaixo para avançar automaticamente."
-    textLabel.TextColor3 = Color3.new(1, 1, 1)
-    textLabel.BackgroundTransparency = 1
+    ScreenGui.Parent = player:WaitForChild("PlayerGui")
+    Frame.Parent = ScreenGui
+    Frame.Size = UDim2.new(0.2, 0, 0.2, 0)
+    Frame.Position = UDim2.new(0.4, 0, 0.4, 0)
+    Frame.Visible = false
 
-    local moveButton = Instance.new("TextButton", frame)
-    moveButton.Size = UDim2.new(0.5, 0, 0.2, 0)
-    moveButton.Position = UDim2.new(0.25, 0, 0.8, 0)
-    moveButton.Text = "Avançar"
-    moveButton.TextColor3 = Color3.new(1, 1, 1)
-    moveButton.BackgroundColor3 = Color3.new(0, 0, 1)
-
-    moveButton.MouseButton1Click:Connect(function()
-        moveForward = true
+    Button.Parent = Frame
+    Button.Size = UDim2.new(1, 0, 1, 0)
+    Button.Text = "Avançar"
+    Button.MouseButton1Click:Connect(function()
+        moveForward = not moveForward
     end)
-
-    return screenGui
 end
 
--- Função para alternar a visibilidade do menu
-local function toggleMenu()
-    if Players.LocalPlayer.PlayerGui:FindFirstChild("MenuGui") then
-        Players.LocalPlayer.PlayerGui.MenuGui:Destroy()
-    else
-        showMenu()
-    end
-end
+createMenu()
 
--- Detectar pressionamento da tecla Enter
-UIS.InputBegan:Connect(function(input)
+game:GetService("UserInputService").InputBegan:Connect(function(input)
     if input.KeyCode == Enum.KeyCode.Return then
-        toggleMenu()
+        menuOpen = not menuOpen
+        player.PlayerGui.ScreenGui.Frame.Visible = menuOpen
     end
 end)
 
--- Movimento automático
 game:GetService("RunService").RenderStepped:Connect(function()
     if moveForward then
-        Players.LocalPlayer.Character:TranslateBy(Vector3.new(0, 0, -0.1))
+        player.Character:TranslateBy(Vector3.new(0, 0, -0.1))
     end
 end)
